@@ -2,6 +2,8 @@ README
 
 **Author**: Sandhya Sirisha Bhamidipati
 
+ This project is for a trading system that acts as a smart middleman, smoothly handling both buy and sell orders in financial markets. It cleverly matches orders to ensure quick and accurate trades, making trading easier and more efficient for everyone involved.
+
 **Order**: Handles requests to buy or sell financial instruments, storing essential details like quantity, price, and order type for smooth execution in trading systems.
 
 **OrderBook**: Organizes buy and sell orders based on price levels, facilitating efficient order matching and execution to maintain market liquidity and optimize trading strategies.
