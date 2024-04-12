@@ -1,6 +1,6 @@
+import java.util.Map;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
@@ -28,13 +28,33 @@ public class OutputProcessorAndFormatter {
             TreeMap<Integer, PriorityQueue<Order>> asks, List<Trade> trades) {
         StringBuilder sb = new StringBuilder();
 
-        // Format bids
-        sb.append("Bids (Buying)\n");
-        sb.append(formatSide(bids));
+        // Get iterators for bids and asks
+        java.util.Iterator<Map.Entry<Integer, PriorityQueue<Order>>> bidIterator = bids.entrySet().iterator();
+        java.util.Iterator<Map.Entry<Integer, PriorityQueue<Order>>> askIterator = asks.entrySet().iterator();
 
-        // Format asks
-        sb.append("\nAsks (Selling)\n");
-        sb.append(formatSide(asks));
+        // Loop until both iterators are done
+        while (bidIterator.hasNext() || askIterator.hasNext()) {
+            // Append one buy
+            if (bidIterator.hasNext()) {
+                Map.Entry<Integer, PriorityQueue<Order>> bidEntry = bidIterator.next();
+                int price = bidEntry.getKey();
+                PriorityQueue<Order> orders = bidEntry.getValue();
+                for (Order order : orders) {
+                    sb.append(String.format("%,8d %8d | ", order.getQuantity(), price));
+                }
+            }
+
+            // Append one ask
+            if (askIterator.hasNext()) {
+                Map.Entry<Integer, PriorityQueue<Order>> askEntry = askIterator.next();
+                int price = askEntry.getKey();
+                PriorityQueue<Order> orders = askEntry.getValue();
+                for (Order order : orders) {
+                    sb.append(String.format("%8d %,8d | ", price, order.getQuantity()));
+                }
+                sb.append("\n");
+            }
+        }
 
         // Format trades
         sb.append("\nTrades\n");
@@ -45,19 +65,4 @@ public class OutputProcessorAndFormatter {
 
         return sb.toString();
     }
-
-    // Format the orders on each side of the order book
-    private static String formatSide(TreeMap<Integer, PriorityQueue<Order>> side) {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<Integer, PriorityQueue<Order>> entry : side.entrySet()) {
-            int price = entry.getKey();
-            PriorityQueue<Order> orders = entry.getValue();
-            for (Order order : orders) {
-                sb.append(String.format("%8d %8d | ", order.getQuantity(), price));
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
 }
